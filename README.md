@@ -2,7 +2,7 @@
 
 MandateCore validates whether an AI-influenced banking decision can be executed under the current delegated authority, evidence, and policy thresholds.
 
-This repo now includes a Streamlit workbench so you can explore the validator without standing up the API first.
+This repo now includes a Streamlit workbench that reads the banking policy pack in `policies/` and records demo audit events for each validation run.
 
 ## Run the Streamlit app
 
@@ -12,10 +12,22 @@ streamlit run streamlit_app.py
 
 ## What the Streamlit workbench includes
 
-- Demo scenario presets from `demo/scenarios.py`
-- Editable decision inputs for actor, action, amount, risk, and evidence
-- Live authority context from the in-memory registry
-- Validation results with `ALLOW`, `ESCALATE`, or `REFUSE` plus reasons
+- Demo scenario presets from `demo/scenarios.py` across wire, fraud, credit, and KYC flows
+- YAML-backed policy resolution from `policies/policy_index.json` and the domain YAML files
+- Generated policy context inputs based on required signals, rule conditions, overrides, and audit fields
+- Live authority context from the demo certificate registry
+- Validation results with `ALLOW`, `ESCALATE`, or `REFUSE` plus policy metadata and reasons
+- An in-memory audit log with downloadable JSON export for demo sessions
+
+## Policy pack
+
+The demo policy pack lives in `policies/` and includes:
+
+- `wire_transfers.yaml`
+- `fraud_operations.yaml`
+- `credit_decisions.yaml`
+- `kyc_remediation.yaml`
+- `policy_index.json`
 
 ## Run the validator tests
 

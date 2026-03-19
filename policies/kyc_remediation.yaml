@@ -1,0 +1,76 @@
+policy_id: kyc-remediation-controls
+version: 1.0.0
+domain: aml_kyc
+business_units:
+  - retail_banking
+  - wealth
+  - commercial_banking
+description: >
+  Governs AI-supported identity remediation and KYC refresh decisions. These
+  controls are intended to prevent unsupported reopening of restricted customer
+  capabilities when due diligence is incomplete or contradictory.
+
+actors:
+  ai_agent:
+    allowed_actions:
+      - recommend_clear_kyc_case
+      - recommend_request_documents
+    max_amount: 0
+    can_override: false
+  kyc_analyst:
+    allowed_actions:
+      - clear_kyc_case
+      - request_additional_documents
+      - escalate_edd_review
+    max_amount: 0
+    can_override: false
+  aml_manager:
+    allowed_actions:
+      - clear_kyc_case
+      - approve_policy_exception
+      - escalate_edd_review
+    max_amount: 0
+    can_override: true
+
+evidence:
+  min_score: 0.82
+  required_signals:
+    - identity_document_validated
+    - customer_profile_refreshed
+    - screening_results_current
+    - beneficial_owner_review_complete_if_required
+
+escalation_rules:
+  - condition: politically_exposed_person = true
+    reason: PEP cases require enhanced due diligence
+  - condition: jurisdiction_risk_high = true
+    reason: High-risk jurisdiction requires escalation
+  - condition: ownership_structure_complex = true
+    reason: Complex ownership requires EDD review
+
+refusal_rules:
+  - condition: screening_match_unresolved = true
+    reason: Unresolved watchlist or sanctions match
+  - condition: evidence_score < 0.55
+    reason: Evidence insufficient to clear KYC case
+  - condition: identity_mismatch = true
+    reason: Identity contradiction blocks case clearance
+
+overrides:
+  allowed_roles:
+    - aml_manager
+  requirements:
+    - exception_rationale
+    - documented_review
+    - time_bound_exception_expiry
+
+audit:
+  log_fields:
+    - decision_id
+    - customer_id
+    - actor_id
+    - actor_role
+    - policy_id
+    - evidence_score
+    - screening_status
+    - outcome

@@ -12,3 +12,5 @@ class ValidationResponse(BaseModel):
     outcome: AuthorityOutcome
     reasons: List[str]
     policy_anchor: str | None = None
+    policy_id: str | None = None
+    policy_version: str | None = None

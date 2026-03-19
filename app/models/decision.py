@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Any, Optional
+
 from pydantic import BaseModel, Field
 
 class AIDecision(BaseModel):
@@ -13,3 +14,8 @@ class AIDecision(BaseModel):
     jurisdiction: str = Field(default="US")
     business_unit: str = Field(default="consumer_banking")
     override_requested: bool = Field(default=False)
+    review_case_id: Optional[str] = Field(default=None, description="Optional linked review or case reference")
+    context: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Policy-specific decision context used for runtime checks and demo audit logging",
+    )

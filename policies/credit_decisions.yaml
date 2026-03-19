@@ -1,0 +1,80 @@
+policy_id: credit-line-increase-controls
+version: 1.0.0
+domain: credit_risk
+business_units:
+  - cards
+  - consumer_lending
+description: >
+  Governs AI-assisted recommendations for credit line increases. The policy
+  assumes AI can recommend but not independently finalize material changes
+  without meeting delegated authority, evidence, and affordability controls.
+
+actors:
+  ai_agent:
+    allowed_actions:
+      - recommend_credit_increase
+      - decline_credit_increase
+    max_amount: 0
+    can_override: false
+  underwriting_analyst:
+    allowed_actions:
+      - approve_credit_increase
+      - decline_credit_increase
+      - escalate_credit_case
+    max_amount: 5000
+    can_override: false
+  credit_manager:
+    allowed_actions:
+      - approve_credit_increase
+      - override_credit_decision
+      - decline_credit_increase
+    max_amount: 25000
+    can_override: true
+
+evidence:
+  min_score: 0.85
+  required_signals:
+    - bureau_pull_current
+    - affordability_assessment_complete
+    - internal_delinquency_review_complete
+    - income_signal_present_or_verified
+
+escalation_rules:
+  - condition: requested_increase > actor.max_amount
+    reason: Requested line increase exceeds delegated authority
+  - condition: thin_file_customer = true
+    reason: Limited credit history requires review
+  - condition: income_variability_high = true
+    reason: Income instability requires adjudication
+  - condition: risk_score >= 0.60
+    reason: Credit risk exceeds auto-approval band
+
+refusal_rules:
+  - condition: active_bankruptcy_signal = true
+    reason: Bankruptcy signal prevents automated approval
+  - condition: 30dpd_in_last_6_months = true
+    reason: Recent delinquency blocks approval
+  - condition: evidence_score < 0.60
+    reason: Evidence insufficient for approval
+  - condition: fair_lending_check_failed = true
+    reason: Fair lending control must pass before execution
+
+overrides:
+  allowed_roles:
+    - credit_manager
+  requirements:
+    - rationale
+    - adverse_action_review_if_applicable
+    - policy_exception_reference
+
+audit:
+  log_fields:
+    - decision_id
+    - customer_id
+    - requested_increase
+    - actor_id
+    - actor_role
+    - policy_id
+    - affordability_result
+    - risk_score
+    - outcome

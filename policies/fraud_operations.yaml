@@ -1,0 +1,77 @@
+policy_id: fraud-hold-release
+version: 1.0.0
+domain: fraud_operations
+business_units:
+  - consumer_banking
+  - cards
+description: >
+  Governs AI recommendations related to releasing fraud holds, maintaining
+  customer access where appropriate, and requiring human review where customer
+  harm or fraud exposure is material.
+
+actors:
+  ai_agent:
+    allowed_actions:
+      - recommend_release_fraud_hold
+      - recommend_maintain_hold
+    max_amount: 0
+    can_override: false
+  fraud_analyst:
+    allowed_actions:
+      - release_fraud_hold
+      - maintain_fraud_hold
+      - escalate_fraud_case
+    max_amount: 25000
+    can_override: true
+  fraud_manager:
+    allowed_actions:
+      - release_fraud_hold
+      - maintain_fraud_hold
+      - override_fraud_case
+    max_amount: 100000
+    can_override: true
+
+evidence:
+  min_score: 0.80
+  required_signals:
+    - customer_contact_completed_or_waived
+    - fraud_alert_history_present
+    - transaction_graph_evaluated
+    - account_takeover_signal_checked
+
+escalation_rules:
+  - condition: mule_network_signal = true
+    reason: Potential mule behavior requires human adjudication
+  - condition: linked_account_exposure = true
+    reason: Related account exposure requires broader review
+  - condition: risk_score >= 0.65
+    reason: Risk exceeds auto-release threshold
+
+refusal_rules:
+  - condition: confirmed_account_takeover = true
+    reason: Confirmed account takeover prohibits release
+  - condition: evidence_score < 0.50
+    reason: Evidence insufficient for release decision
+  - condition: active_law_enforcement_hold = true
+    reason: External hold prevents release
+
+overrides:
+  allowed_roles:
+    - fraud_analyst
+    - fraud_manager
+  requirements:
+    - documented_customer_contact
+    - analyst_notes
+    - manager_attestation_if_override
+
+audit:
+  log_fields:
+    - decision_id
+    - account_id
+    - hold_reason
+    - actor_id
+    - actor_role
+    - policy_id
+    - evidence_score
+    - risk_score
+    - outcome

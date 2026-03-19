@@ -1,0 +1,46 @@
+{
+  "policy_pack": "banking",
+  "version": "1.0.0",
+  "policies": [
+    {
+      "policy_id": "wire-transfer-controls",
+      "file": "wire_transfers.yaml",
+      "domain": "payments",
+      "primary_actions": [
+        "approve_wire",
+        "release_wire_hold",
+        "flag_wire_review"
+      ]
+    },
+    {
+      "policy_id": "fraud-hold-release",
+      "file": "fraud_operations.yaml",
+      "domain": "fraud_operations",
+      "primary_actions": [
+        "recommend_release_fraud_hold",
+        "release_fraud_hold",
+        "maintain_fraud_hold"
+      ]
+    },
+    {
+      "policy_id": "credit-line-increase-controls",
+      "file": "credit_decisions.yaml",
+      "domain": "credit_risk",
+      "primary_actions": [
+        "recommend_credit_increase",
+        "approve_credit_increase",
+        "decline_credit_increase"
+      ]
+    },
+    {
+      "policy_id": "kyc-remediation-controls",
+      "file": "kyc_remediation.yaml",
+      "domain": "aml_kyc",
+      "primary_actions": [
+        "recommend_clear_kyc_case",
+        "clear_kyc_case",
+        "escalate_edd_review"
+      ]
+    }
+  ]
+}

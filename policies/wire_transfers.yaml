@@ -1,0 +1,83 @@
+policy_id: wire-transfer-controls
+version: 1.0.0
+domain: payments
+business_units:
+  - consumer_banking
+  - commercial_banking
+description: >
+  Governs AI-assisted wire approval recommendations. Designed to prevent
+  automated release of wires that exceed delegated authority, present elevated
+  fraud or sanctions risk, or lack sufficient evidentiary support.
+
+actors:
+  ai_agent:
+    allowed_actions:
+      - approve_wire
+      - flag_wire_review
+    max_amount: 10000
+    can_override: false
+  fraud_analyst:
+    allowed_actions:
+      - approve_wire
+      - release_wire_hold
+      - flag_wire_review
+    max_amount: 25000
+    can_override: true
+  payments_supervisor:
+    allowed_actions:
+      - approve_wire
+      - release_wire_hold
+      - override_wire_decision
+    max_amount: 100000
+    can_override: true
+
+evidence:
+  min_score: 0.75
+  required_signals:
+    - customer_authentication_match
+    - account_status_clear
+    - sanctions_screen_complete
+    - fraud_model_score_present
+
+escalation_rules:
+  - condition: amount > actor.max_amount
+    reason: Requested amount exceeds delegated authority
+  - condition: risk_score >= 0.70
+    reason: Risk exceeds auto-approval threshold
+  - condition: first_time_beneficiary = true
+    reason: First-time beneficiary requires review
+  - condition: out_of_pattern_transaction = true
+    reason: Payment behavior deviates from baseline
+
+refusal_rules:
+  - condition: risk_score >= 0.92
+    reason: Hard-stop fraud or compliance risk threshold exceeded
+  - condition: sanctions_hit = true
+    reason: Positive sanctions signal cannot auto-execute
+  - condition: evidence_score < 0.40
+    reason: Evidence too weak to support any execution path
+  - condition: actor_certificate_active = false
+    reason: Actor authority certificate inactive
+
+overrides:
+  allowed_roles:
+    - fraud_analyst
+    - payments_supervisor
+  requirements:
+    - override_justification
+    - case_reference
+    - second_level_attestation_if_amount_over_25000
+
+audit:
+  log_fields:
+    - decision_id
+    - actor_id
+    - actor_role
+    - policy_id
+    - policy_version
+    - amount
+    - risk_score
+    - evidence_score
+    - outcome
+    - override_requested
+    - review_case_id
