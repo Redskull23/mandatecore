@@ -377,7 +377,7 @@ def main() -> None:
         """
         <div class="hero">
             <div class="eyebrow">Runtime authority validation</div>
-            <div class="hero-title">MandateCore YAML Policy Workbench</div>
+            <div class="hero-title">MandateCore Sample Policy Workbench</div>
             <div class="hero-copy">
                 Run cross-domain banking decisions against the policy pack in <code>policies/</code>,
                 inspect the matched controls, and capture a demo audit trail for every validation.
