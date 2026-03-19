@@ -1,5 +1,5 @@
 # MandateCore
-MandateCore helps determine whether an AI-influenced banking decision should actually go through—based on authority, available evidence, and policy constraints.
+MandateCore helps determine whether an AI-influenced banking decision should actually go through based on authority, available evidence, and policy constraints.
 
 This repo includes a Streamlit workbench that loads a banking policy pack from policies/ and logs audit events for each validation run.
 
