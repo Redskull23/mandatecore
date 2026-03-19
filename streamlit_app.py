@@ -273,13 +273,14 @@ def main() -> None:
         <style>
         [data-testid="stAppViewContainer"] {
             background:
-                radial-gradient(circle at top left, rgba(14, 116, 144, 0.14), transparent 28%),
-                radial-gradient(circle at top right, rgba(217, 119, 6, 0.14), transparent 24%),
-                linear-gradient(180deg, #f5f7f2 0%, #ffffff 100%);
+                radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 24%),
+                linear-gradient(180deg, #07111f 0%, #0b1627 52%, #101a2f 100%);
         }
 
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+            background: linear-gradient(180deg, #0b1627 0%, #111f35 100%);
+            border-right: 1px solid rgba(148, 163, 184, 0.16);
         }
 
         .block-container {
@@ -288,13 +289,26 @@ def main() -> None:
             padding-bottom: 2rem;
         }
 
+        [data-testid="stHeader"] {
+            background: rgba(7, 17, 31, 0.72);
+        }
+
+        [data-testid="stAppViewContainer"] label,
+        [data-testid="stAppViewContainer"] .stMarkdown,
+        [data-testid="stAppViewContainer"] .stCaption,
+        [data-testid="stSidebar"] .stMarkdown,
+        [data-testid="stSidebar"] .stCaption {
+            color: #dbe7f5;
+        }
+
         .hero {
             padding: 1.5rem;
-            border: 1px solid rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.18);
             border-radius: 24px;
-            background: rgba(255, 255, 255, 0.84);
+            background:
+                linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(17, 31, 53, 0.9) 100%);
             backdrop-filter: blur(12px);
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.45);
             margin-bottom: 1rem;
         }
 
@@ -302,18 +316,18 @@ def main() -> None:
             font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: #475569;
+            color: #7dd3fc;
         }
 
         .hero-title {
             font-size: 2.2rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #f8fafc;
             margin-top: 0.35rem;
         }
 
         .hero-copy {
-            color: #334155;
+            color: #cbd5e1;
             margin-top: 0.6rem;
             max-width: 60rem;
         }
@@ -322,26 +336,33 @@ def main() -> None:
             border-radius: 24px;
             padding: 1.35rem 1.5rem;
             color: #ffffff;
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.38);
             margin-bottom: 1rem;
         }
 
         .outcome-ALLOW {
-            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            background: linear-gradient(135deg, #115e59 0%, #0f766e 100%);
         }
 
         .outcome-ESCALATE {
-            background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
+            background: linear-gradient(135deg, #9a3412 0%, #ea580c 100%);
         }
 
         .outcome-REFUSE {
-            background: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%);
+            background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
         }
 
         .outcome-value {
             font-size: 2rem;
             font-weight: 700;
             margin-top: 0.35rem;
+        }
+
+        code {
+            color: #e2e8f0;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.15rem 0.35rem;
+            border-radius: 0.35rem;
         }
         </style>
         """,
